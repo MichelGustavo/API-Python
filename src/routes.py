@@ -4,10 +4,14 @@ from flask import render_template
 
 bp = Blueprint('users', __name__)
 
+# HTML
 @bp.route('/createUser')
 def createUser():
     return render_template("createUser.html")
 
+@bp
+
+# HTTP
 @bp.route('/users', methods=['GET'])
 def list_users():
     users = get_all_users()
