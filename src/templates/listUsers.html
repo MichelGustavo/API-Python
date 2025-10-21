@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Usuários</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Usuários Cadastrados</h1>
+
+    <table id="usersTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Cargo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <a href="{{ url_for('users.createUser') }}" class="btn">Cadastrar novo usuário</a>
+
+    <script>
+        async function carregarUsuarios() {
+            const res = await fetch('/users');
+            const data = await res.json();
+
+            const tbody = document.querySelector('#usersTable tbody');
+            tbody.innerHTML = '';
+
+            data.forEach(user => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.id}</td>
+                    <td>${user.name}</td>
+                    <td>${user.email}</td>
+                    <td>${user.cargo}</td>
+                    <td>
+                        <button onclick="editar(${user.id})">Editar</button>
+                        <button onclick="deletar(${user.id})" class="delete">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        async function deletar(id) {
+            if (!confirm("Deseja realmente excluir este usuário?")) return;
+            await fetch(`/users/${id}`, { method: 'DELETE' });
+            carregarUsuarios();
+        }
+
+        function editar(id) {
+            window.location.href = `/editUser/${id}`;
+        }
+
+        carregarUsuarios();
+    </script>
+</body>
+</html>

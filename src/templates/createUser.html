@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='create_user/css_createUser.css')}}">
+</head>
+<body>
+    <div>
+        <h1>Cadastrar funcionarios</h1>
+        <h2>Nome</h2>
+        <input type="text" id="nome">
+        <h2>Email</h2>
+        <input type="email" id="email">
+        <h2>Cargo</h2>
+        <input type="cargo" id="cargo">
+        <button onclick="adicionarUsuario()">Cadastrar</button>
+        <p id="mensagem"></p>
+        <button onclick="listaDeUsuariosHref()">Lista de usuários</button>
+    </div>
+    
+
+
+
+    <script>
+        function listaDeUsuariosHref() {
+                window.location.href = "http://127.0.0.1:5000/listUsers";
+        }
+
+        async function adicionarUsuario() {
+            const name = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+            const cargo = document.getElementById('cargo').value;
+
+            const response = await fetch("http://127.0.0.1:5000/users", {
+                method: "POST",
+                headers: {
+                    "Content-Type" : "application/json"
+                },
+                body: JSON.stringify({"name":name,"email":email,"cargo":cargo})
+            });
+            const data = await response.json();
+            console.log(data)
+            const mensagem = document.getElementById('mensagem').textContent = data.name + " adicionado!";
+        }
+    </script>
+</body>
+</html>
